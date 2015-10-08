@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 var ModuleManager = function (eventIdentifier) {
     this.identifier = eventIdentifier;
-    this.registeredModules = [{'module-identifier': 'moduleManager','module-namespace': 'com.easyFramework.module', 'status': 'loaded', 'reference': moduleManager},];
+    this.registeredModules = [{'module-identifier': 'moduleManager','module-namespace': 'com.easyFramework.module', 'status': 'loaded', 'reference': ModuleManager},];
 };
 
 ModuleManager.prototype.register = function (args) {

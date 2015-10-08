@@ -26,9 +26,8 @@ THE SOFTWARE.
 
 var LoadManager = function (eventIdentifier) {
     this.loadQueue = [];
-    this.moduleLoader = null;
+    this.moduleLoader = new ModuleLoader(eventIdentifier);
     this.eventIdentifier = eventIdentifier;
-
     this.registerEvent(eventIdentifier, this.eventStatusCallback);
 };
 
