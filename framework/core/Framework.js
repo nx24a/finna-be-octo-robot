@@ -25,6 +25,7 @@ THE SOFTWARE.
 *****************************************************************************/
 
 var JSFW = function () {
+    this.JSFWApplication = null;
     //Loading Events
     this.JSFWEventHandler = new EventHandler();
     this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers["jsfw-init"], this.loadFrameWork);
