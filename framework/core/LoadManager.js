@@ -29,10 +29,12 @@ var LoadManager = function (eventIdentifier) {
     this.moduleLoader = new ModuleLoader(eventIdentifier);
     this.eventIdentifier = eventIdentifier;
     this.registerEvent(eventIdentifier, this.eventStatusCallback);
+    this.registerEvent(eventIdentifier+"-status", this.eventStatusCallback);
 };
 
 LoadManager.prototype.registerEvent = function(eventIdentifier, callback) {
     document.addEventListener(eventIdentifier, callback, false);
+    console.info('New Eventlistener: '+eventIdentifier);
 };
 
 LoadManager.prototype.unregisterEvent = function (eventIdentifier, callback) {
@@ -44,9 +46,10 @@ LoadManager.prototype.notify = function(eventIdentifier, data) {
     document.dispatchEvent(event);
 };
 
-LoadManager.prototype.addToQueue = function(key) {
+LoadManager.prototype.addToQueue = function(meta) {
     try {
-        this.loadQueue.push({'key': key, 'status': -1});
+        this.loadQueue.push({'key': meta["module-identifier"], 'status': -1});
+        this.moduleLoader.loadModule(meta);
     } catch(e) {
         console.log(e);
     }
@@ -92,5 +95,5 @@ LoadManager.prototype.getQueueLength = function() {
 };
 
 LoadManager.prototype.eventStatusCallback = function(event) {
-    console.log(event.detail.status);
+    console.log(event);
 };

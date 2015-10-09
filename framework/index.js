@@ -24,4 +24,5 @@ THE SOFTWARE.
 
 *****************************************************************************/
 
-var framework = new JSFW();
+var Framework = new JSFW();
+Framework.loadFramework();

@@ -81,4 +81,5 @@ ModuleManager.prototype.access = function (key) {
 ModuleManager.prototype.notify = function (identifier, data) {
         var event = new CustomEvent(identifier, { 'detail': data });
         document.dispatchEvent(event);
+        console.info(identifier + " triggered");
 };

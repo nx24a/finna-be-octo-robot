@@ -30,7 +30,7 @@ var ModuleLoader = function (eventIdentifier) {
 
 ModuleLoader.prototype.loadModule = function (moduleInformation) {
     var keeper = document.getElementById('application-scripts');
-    var script = documen.createElement('script');
+    var script = document.createElement('script');
     script.setAttribute('type', 'text/javascript');
     script.setAttribute('src', moduleInformation["include-path"]);
     script.setAttribute('async', true);
@@ -47,5 +47,32 @@ ModuleLoader.prototype.loadModule = function (moduleInformation) {
     };
 
     keeper.appendChild(script);
-    //this.loadStatus.push({'key': moduleInformation["module-identifier"], 'status': -1});
+    this.notify(this.identifier, {'key': moduleInformation["module-identifier"], 'status': -1});
+};
+
+ModuleLoader.prototype.loadFile = function (filepath) {
+    var keeper = document.getElementById('application-scripts');
+    var script = document.createElement('script');
+    script.setAttribute('type', 'text/javascript');
+    script.setAttribute('src', filepath);
+    script.setAttribute('async', true);
+
+    script.onerror = function () {
+        script.onerror = null;
+    };
+
+    script.onload = script.onreadystatechange = function () {
+        if(!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
+            script.onload = script.onreadystatechange = null;
+        }
+    };
+
+    keeper.appendChild(script);
+    this.notify(this.identifier, {'key': 'file', 'status': 'done'});
+};
+
+ModuleLoader.prototype.notify = function (identifier, data) {
+        var event = new CustomEvent(identifier, { 'detail': data });
+        document.dispatchEvent(event);
+        console.info(identifier + " triggered");
 };
