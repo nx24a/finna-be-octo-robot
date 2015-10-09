@@ -85,9 +85,7 @@ LoadManager.prototype.eventStatusCallback = function(event) {
         case 0:
             Framework.JSFWInitialLoadManager.updateQueueItemStatus({key: event.detail.key, status: event.detail.status});
             if(Framework.JSFWInitialLoadManager.QueueStatus() == true) {
-                if(Framework.JSFWEventHandler.notify(eventHandlerIdentifiers["jsfw-app-init"], {'status': 1})) {
-                    console.log("notified");
-                }
+                Framework.JSFWEventHandler.notify(eventHandlerIdentifiers["jsfw-app-init"], {'status': 1});
             }
         break;
     }
