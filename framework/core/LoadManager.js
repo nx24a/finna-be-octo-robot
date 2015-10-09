@@ -27,23 +27,8 @@ THE SOFTWARE.
 var LoadManager = function (eventIdentifier) {
     this.loadQueue = [];
     this.moduleLoader = new ModuleLoader(eventIdentifier);
-    this.eventIdentifier = eventIdentifier;
-    this.registerEvent(eventIdentifier, this.eventStatusCallback);
-    this.registerEvent(eventIdentifier+"-status", this.eventStatusCallback);
-};
-
-LoadManager.prototype.registerEvent = function(eventIdentifier, callback) {
-    document.addEventListener(eventIdentifier, callback, false);
-    console.info('New Eventlistener: '+eventIdentifier);
-};
-
-LoadManager.prototype.unregisterEvent = function (eventIdentifier, callback) {
-    document.removeEventListener(eventIdentifier, callback, false);
-};
-
-LoadManager.prototype.notify = function(eventIdentifier, data) {
-    var event = new CustomEvent(eventIdentifier, {'detail': data});
-    document.dispatchEvent(event);
+    this.eventHandler = new EventHandler(eventIdentifier);
+    this.eventHandler.registerEvent(eventIdentifier, this.eventStatusCallback);
 };
 
 LoadManager.prototype.addToQueue = function(meta) {
@@ -70,7 +55,7 @@ LoadManager.prototype.updateQueueItemStatus = function(responseData) {
 
 LoadManager.prototype.QueueStatus = function() {
     try {
-        var queueLength = LoadManager.getQueueLength();
+        var queueLength = this.loadQueue.length;
         var sum = 0;
 
         for(var i=0; i<queueLength; i++) {
@@ -80,9 +65,9 @@ LoadManager.prototype.QueueStatus = function() {
         }
 
         if(sum == queueLength) {
-            this.notify(this.eventIdentifier, {'status': '1'});
+            return true;
         } else {
-            this.notify(this.eventIdentifier, {'status': '-1'});
+            return false;
         }
 
     } catch (e) {
@@ -90,10 +75,8 @@ LoadManager.prototype.QueueStatus = function() {
     }
 };
 
-LoadManager.prototype.getQueueLength = function() {
-    return this.loadQueue.length;
-};
-
 LoadManager.prototype.eventStatusCallback = function(event) {
-    console.log(event);
+    if(Framework.JSFWInitialLoadManager.QueueStatus()) {
+        Framework.JSFWEventHandler.notify(eventHandlerIdentifiers["jsfw-init"], {'status': 1});
+    }
 };

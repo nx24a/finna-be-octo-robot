@@ -25,17 +25,49 @@ THE SOFTWARE.
 *****************************************************************************/
 
 var JSFW = function () {
-    this.JSFWInitialLoadManager = new LoadManager('jsfw-initialize');
-    this.JSFWModuleManager = new ModuleManager('jsfw-module-manager');
-    this.JSFWModuleLoader = new ModuleLoader('jsfw-module-loader');
+    //Loading Events
+    this.JSFWEventHandler = new EventHandler();
+    this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers["jsfw-init"], this.loadFrameWork);
+    this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers["jsfw-app-init"], this.loadApplication);
+    this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers["jsfw-app-ready"], this.run);
+
+    //Intitalizing requiered Objects
+    this.JSFWInitialLoadManager = new LoadManager(eventHandlerIdentifiers["jsfw-load-manager"]);
+    this.JSFWModuleManager = new ModuleManager(eventHandlerIdentifiers["jsfw-module-manager"]);
+    this.JSFWModuleLoader = new ModuleLoader(eventHandlerIdentifiers["jsfw-module-loader"]);
 };
 
-JSFW.prototype.loadFramework = function () {
-    this.JSFWModuleLoader.loadFile('framework/support/fastclick.js');
-    this.JSFWModuleLoader.loadFile('framework/support/jquery-2.1.4.min.js');
-    this.JSFWModuleLoader.loadFile('configuration/required.modules.js');
+JSFW.prototype.loadFramework = function (event) {
+
+    var status = -1;
+    if(event != null) {
+        status = event.detail.status;
+    }
+
+    switch(status) {
+        default:
+            //
+            console.log("loading framework");
+            //Support Functions
+            this.JSFWModuleLoader.loadFile('framework/support/fastclick.js');
+            this.JSFWModuleLoader.loadFile('framework/support/jquery-2.1.4.min.js');
+
+            //Load reuired modules
+            this.JSFWModuleLoader.loadFile('configuration/required.modules.js');
+        break;
+        case 1:
+            console.log('1');
+        break;
+    }
 };
 
-JSFW.prototype.loadApplication = function () {
+JSFW.prototype.loadApplication = function (envent) {
+
+    //Load Application Configuration
+    Framework.JSFWModuleLoader.loadFile('configuration/required.application.config.js');
+
+}
+
+JSFW.prototype.run = function (event) {
 
 }
