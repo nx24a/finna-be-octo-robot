@@ -46,7 +46,7 @@ ModuleManager.prototype.register = function (args) {
 
         if(typeof newModule.reference == 'object') {
             newModule.status = 'loaded';
-            this.notify(this.identifier,{key: args["module-identifier"], 'status': 1});
+            this.notify({action: 0, key: args["module-identifier"], 'status': 1});
         } else {
             newModule.status = 'not loaded';
         }
@@ -78,8 +78,7 @@ ModuleManager.prototype.access = function (key) {
         return this.registeredModules[i].reference;
 };
 
-ModuleManager.prototype.notify = function (identifier, data) {
-        var event = new CustomEvent(identifier, { 'detail': data });
+ModuleManager.prototype.notify = function (data) {
+        var event = new CustomEvent(this.identifier, { 'detail': data });
         document.dispatchEvent(event);
-        console.info(identifier + " triggered");
 };

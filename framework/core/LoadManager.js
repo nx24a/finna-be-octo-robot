@@ -26,6 +26,7 @@ THE SOFTWARE.
 
 var LoadManager = function (eventIdentifier) {
     this.loadQueue = [];
+    this.identifier = eventIdentifier;
     this.moduleLoader = new ModuleLoader(eventIdentifier);
     this.eventHandler = new EventHandler(eventIdentifier);
     this.eventHandler.registerEvent(eventIdentifier, this.eventStatusCallback);
@@ -42,7 +43,7 @@ LoadManager.prototype.addToQueue = function(meta) {
 
 LoadManager.prototype.updateQueueItemStatus = function(responseData) {
     try {
-        var queueLength = LoadManager.getQueueLength();
+        var queueLength = this.loadQueue.length;
         for(var i=0; i<queueLength; i++) {
             if(this.loadQueue[i].key == responseData.key) {
                 this.loadQueue[i].status = responseData.status;
@@ -76,7 +77,18 @@ LoadManager.prototype.QueueStatus = function() {
 };
 
 LoadManager.prototype.eventStatusCallback = function(event) {
-    if(Framework.JSFWInitialLoadManager.QueueStatus()) {
-        Framework.JSFWEventHandler.notify(eventHandlerIdentifiers["jsfw-init"], {'status': 1});
+    var action = -1;
+    if(event != null) {
+        action = event.detail.action;
+    }
+    switch(action) {
+        case 0:
+            Framework.JSFWInitialLoadManager.updateQueueItemStatus({key: event.detail.key, status: event.detail.status});
+            if(Framework.JSFWInitialLoadManager.QueueStatus() == true) {
+                if(Framework.JSFWEventHandler.notify(eventHandlerIdentifiers["jsfw-app-init"], {'status': 1})) {
+                    console.log("notified");
+                }
+            }
+        break;
     }
 };

@@ -47,7 +47,7 @@ ModuleLoader.prototype.loadModule = function (moduleInformation) {
     };
 
     keeper.appendChild(script);
-    this.notify(this.identifier, {'key': moduleInformation["module-identifier"], 'status': -1});
+    this.notify({'action': 0, 'key': moduleInformation["module-identifier"], 'status': 0});
 };
 
 ModuleLoader.prototype.loadFile = function (filepath) {
@@ -71,8 +71,7 @@ ModuleLoader.prototype.loadFile = function (filepath) {
     this.notify(this.identifier, {'key': 'file', 'status': 'done'});
 };
 
-ModuleLoader.prototype.notify = function (identifier, data) {
-        var event = new CustomEvent(identifier, { 'detail': data });
+ModuleLoader.prototype.notify = function (data) {
+        var event = new CustomEvent(this.identifier, { 'detail': data });
         document.dispatchEvent(event);
-        console.info(identifier + " triggered");
 };

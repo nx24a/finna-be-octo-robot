@@ -33,19 +33,16 @@ var JSFW = function () {
 
     //Intitalizing requiered Objects
     this.JSFWInitialLoadManager = new LoadManager(eventHandlerIdentifiers["jsfw-load-manager"]);
-    this.JSFWModuleManager = new ModuleManager(eventHandlerIdentifiers["jsfw-module-manager"]);
-    this.JSFWModuleLoader = new ModuleLoader(eventHandlerIdentifiers["jsfw-module-loader"]);
+    this.JSFWModuleManager = new ModuleManager(eventHandlerIdentifiers["jsfw-load-manager"]);
+    this.JSFWModuleLoader = new ModuleLoader(eventHandlerIdentifiers["jsfw-load-manager"]);
 };
 
 JSFW.prototype.loadFramework = function (event) {
-
-    var status = -1;
-    if(event != null) {
-        status = event.detail.status;
-    }
+    var status = 0;
+    if(event != null) {status = event.detail.status;}
 
     switch(status) {
-        default:
+        case 0:
             //
             console.log("loading framework");
             //Support Functions
@@ -55,17 +52,12 @@ JSFW.prototype.loadFramework = function (event) {
             //Load reuired modules
             this.JSFWModuleLoader.loadFile('configuration/required.modules.js');
         break;
-        case 1:
-            console.log('1');
-        break;
     }
 };
 
-JSFW.prototype.loadApplication = function (envent) {
-
+JSFW.prototype.loadApplication = function (event) {
     //Load Application Configuration
     Framework.JSFWModuleLoader.loadFile('configuration/required.application.config.js');
-
 }
 
 JSFW.prototype.run = function (event) {
