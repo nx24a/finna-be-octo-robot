@@ -24,35 +24,7 @@ THE SOFTWARE.
 
 *****************************************************************************/
 
-var JSFW = function () {
-    this.JSFWApplication = null;
-    //Loading Events
-    this.JSFWEventHandler = new EventHandler();
-    this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers["jsfw-init"], this.loadFrameWork);
-    this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers["jsfw-app-init"], this.loadApplication);
-    this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers["jsfw-app-ready"], this.run);
-
-    //Intitalizing requiered Objects
-    this.JSFWTaskManager = new LoadManager();
-    this.JSFWModuleManager = new ModuleManager();
+var Queue = function() {
+    
 };
 
-JSFW.prototype.loadFramework = function () {
-    //
-    ///console.log("loading framework");
-    //Support Functions
-    //this.JSFWModuleLoader.loadFile('framework/support/fastclick.js');
-    //this.JSFWModuleLoader.loadFile('framework/support/jquery-2.1.4.min.js');
-
-    //Load reuired modules
-    //this.JSFWModuleLoader.loadFile('configuration/required.modules.js');
-};
-
-JSFW.prototype.loadApplication = function () {
-    //Load Application Configuration
-    //Framework.JSFWModuleLoader.loadFile('configuration/required.application.config.js');
-};
-
-JSFW.prototype.run = function () {
-
-};

@@ -3,17 +3,18 @@ var EventHandler = function () {
 };
 
 EventHandler.prototype.registerEvent = function(eventIdentifier, callback) {
-    document.addEventListener(eventIdentifier, callback, false);
+    window.addEventListener(eventIdentifier, callback, false);
     console.info('JSFW-Events: New Eventlistener: '+eventIdentifier);
 };
 
 EventHandler.prototype.unregisterEvent = function (eventIdentifier, callback) {
-    document.removeEventListener(eventIdentifier, callback, false);
+    window.removeEventListener(eventIdentifier, callback, false);
 };
 
 EventHandler.prototype.notify = function(eventIdentifier, data) {
     var event = new CustomEvent(eventIdentifier, {'detail': data});
-    if(document.dispatchEvent(event)) {
+    if(window.dispatchEvent(event)) {
+        console.log('event dispatched');
         return true;
     } else {
         return false;
