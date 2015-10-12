@@ -24,18 +24,23 @@ THE SOFTWARE.
 
 *****************************************************************************/
 
-var App = function() {
- 
+var App = function(applicationConfiguration) {
+    this.Configuration = applicationConfiguration;
+    this.StoryboardManager = null;
+    
+    //avoid delay
+    FastClick.attach(document.body);
 };
 
 App.prototype.run = function() {
+    document.title = this.Configuration.appName + ' ('+ this.Configuration.appVersion +')';
     document.getElementById('application-content').innerHTML = 'App Running';
 };
 
 
 //Callback - Register module
 (function () {
-    var lref = new App();
+    var lref = new App(applicationConfiguration);
     var args = {'module-identifier': 'jsfw-app-bootstrap','module-namespace': 'none', 'status': 'loaded', 'reference': lref};
     Framework.JSFWModuleManager.register(args);
 })();

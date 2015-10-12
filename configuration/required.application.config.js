@@ -1,7 +1,7 @@
 //Define
 var applicationConfiguration = {
-    'appName': 'framework-test',
-    'appVersion': '0.1.1 - test',
+    'appName': 'JSFW Applitest',
+    'appVersion': '0.1.2',
     'frameworkVersion': '0.1.1 - alpha',
     'splashScreen': 'resource/public/...',
     'entrypoint': 'main',

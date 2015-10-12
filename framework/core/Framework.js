@@ -58,7 +58,7 @@ JSFW.prototype.loadFramework = function (data) {
             this.JSFWTaskManager.moduleLoader.loadFile('configuration/required.modules.js');  
            break;
        case 1:
-           console.log("JSFW-Information: waiting for files to load");
+           console.log("JSFW-Information: waiting for files to load (framework level)");
            break;
        case 2:
            console.info("JSFW-Information: framework loaded");
@@ -84,7 +84,7 @@ JSFW.prototype.loadApplication = function (data) {
             this.JSFWTaskManager.moduleLoader.loadFile('configuration/required.application.config.js');
             break;
         case 1:
-            console.log("JSFW-Information: waiting for files to load");
+            console.log("JSFW-Information: waiting for files to load (application level)");
             break;
         case 2:
             this.JSFWEventHandler.unregisterEvent(eventHandlerIdentifiers["jsfw-app-init"], this.loadApplication);
