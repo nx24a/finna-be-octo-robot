@@ -25,34 +25,76 @@ THE SOFTWARE.
 *****************************************************************************/
 
 var JSFW = function () {
-    this.JSFWApplication = null;
+    console.info("JSFW-Information: Initializing");
     //Loading Events
     this.JSFWEventHandler = new EventHandler();
-    this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers["jsfw-init"], this.loadFrameWork);
-    this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers["jsfw-app-init"], this.loadApplication);
-    this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers["jsfw-app-ready"], this.run);
+    this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers['jsfw-init'], this.loadFramework.bind(this));
+
+    //Framework loading state
+    this.loadState = 0;
 
     //Intitalizing requiered Objects
-    this.JSFWTaskManager = new LoadManager();
-    this.JSFWModuleManager = new ModuleManager();
+   this.JSFWTaskManager = new LoadManager(eventHandlerIdentifiers["jsfw-load-manager"], eventHandlerIdentifiers['jsfw-init']);
+   this.JSFWModuleManager = new ModuleManager(eventHandlerIdentifiers["jsfw-load-manager"]);
+    
+    //Application
+    this.JSFWApplication = null;
 };
 
-JSFW.prototype.loadFramework = function () {
-    //
-    ///console.log("loading framework");
-    //Support Functions
-    //this.JSFWModuleLoader.loadFile('framework/support/fastclick.js');
-    //this.JSFWModuleLoader.loadFile('framework/support/jquery-2.1.4.min.js');
+JSFW.prototype.loadFramework = function (data) {
+    
+    if(data != null) {
+        this.loadState = data.detail.status;
+    }
+    
+    switch(this.loadState) {
+        case 0:
+            console.info("JSFW-Information: loading framework");
+            //Support Functions
+            this.JSFWTaskManager.moduleLoader.loadFile('framework/support/fastclick.js');
+            this.JSFWTaskManager.moduleLoader.loadFile('framework/support/jquery-2.1.4.min.js');
 
-    //Load reuired modules
-    //this.JSFWModuleLoader.loadFile('configuration/required.modules.js');
+            //Load reuired modules
+            this.JSFWTaskManager.moduleLoader.loadFile('configuration/required.modules.js');  
+           break;
+       case 1:
+           console.log("JSFW-Information: waiting for files to load");
+           break;
+       case 2:
+           console.info("JSFW-Information: framework loaded");
+           this.loadState = 0;
+           this.JSFWEventHandler.unregisterEvent(eventHandlerIdentifiers['jsfw-init'], this.loadFramework);
+           this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers["jsfw-app-init"], this.loadApplication.bind(this));
+           this.loadApplication(null);
+           break;  
+    }
 };
 
-JSFW.prototype.loadApplication = function () {
-    //Load Application Configuration
-    //Framework.JSFWModuleLoader.loadFile('configuration/required.application.config.js');
+JSFW.prototype.loadApplication = function (data) {
+    
+    if(data != null) {
+        this.loadState = data.detail.status;
+    }
+    
+    switch(this.loadState) {
+        case 0:
+            console.info('JSFW-Information: loading application');
+            //Load Application Configuration
+            this.JSFWTaskManager.identifierSuper = eventHandlerIdentifiers["jsfw-app-init"];
+            this.JSFWTaskManager.moduleLoader.loadFile('configuration/required.application.config.js');
+            break;
+        case 1:
+            console.log("JSFW-Information: waiting for files to load");
+            break;
+        case 2:
+            this.JSFWEventHandler.unregisterEvent(eventHandlerIdentifiers["jsfw-app-init"], this.loadApplication);
+            this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers["jsfw-app-ready"], this.run.bind(this));
+            this.JSFWTaskManager.identifierSuper = eventHandlerIdentifiers["jsfw-app-ready"];
+            this.JSFWEventHandler.notify(eventHandlerIdentifiers["jsfw-app-ready"], null);
+            break;
+    }
 };
 
 JSFW.prototype.run = function () {
-
+    this.JSFWModuleManager.access('jsfw-app-bootstrap').run();
 };

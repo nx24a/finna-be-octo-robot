@@ -46,20 +46,20 @@ ModuleManager.prototype.register = function (args) {
 
         if(typeof newModule.reference == 'object') {
             newModule.status = 'loaded';
-            this.notify({action: 0, key: args["module-identifier"], 'status': 1});
         } else {
             newModule.status = 'not loaded';
         }
 
         if(this.registeredModules.push(newModule)) {
-            console.log('module ' + newModule["module-identifier"] + ' has status: '+newModule.status);
+            console.info('JSFW-Module ' + newModule["module-identifier"] + ' has status: '+newModule.status);
+            this.notify({key: args["module-identifier"], 'status': 1});
         }
 };
 
 ModuleManager.prototype.registerBypass = function (args) {
         var newModule = args;
         if(this.registeredModules.push(newModule)) {
-            console.log('module(bypassed) ' + newModule["module-identifier"] + ' has status: '+newModule.status);
+            console.info('JSFW-Module(bypassed) ' + newModule["module-identifier"] + ' has status: '+newModule.status);
         }
 };
 
@@ -70,15 +70,15 @@ ModuleManager.prototype.unregister = function (key) {
 ModuleManager.prototype.access = function (key) {
         var pos = 0;
         for(var i=0; i<this.registeredModules.length; i++) {
-            if(this.registeredModules[i]["module-identifier"] == moduleID && this.registeredModules[i]["status"] == 'loaded') {
+            if(this.registeredModules[i]["module-identifier"] == key && this.registeredModules[i]["status"] == 'loaded') {
                 pos = i;
                 break;
             }
         }
-        return this.registeredModules[i].reference;
+        return this.registeredModules[pos].reference;
 };
 
 ModuleManager.prototype.notify = function (data) {
         var event = new CustomEvent(this.identifier, { 'detail': data });
-        document.dispatchEvent(event);
+        window.dispatchEvent(event);
 };

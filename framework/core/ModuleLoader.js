@@ -47,7 +47,7 @@ ModuleLoader.prototype.loadModule = function (moduleInformation) {
     };
 
     keeper.appendChild(script);
-    this.notify({'action': 0, 'key': moduleInformation["module-identifier"], 'status': 0});
+    this.notify({'key': moduleInformation["module-identifier"], 'status': 0});
 };
 
 ModuleLoader.prototype.loadFile = function (filepath) {
@@ -68,10 +68,9 @@ ModuleLoader.prototype.loadFile = function (filepath) {
     };
 
     keeper.appendChild(script);
-    this.notify(this.identifier, {'key': 'file', 'status': 'done'});
 };
 
 ModuleLoader.prototype.notify = function (data) {
         var event = new CustomEvent(this.identifier, { 'detail': data });
-        document.dispatchEvent(event);
+        window.dispatchEvent(event);
 };

@@ -24,12 +24,13 @@ THE SOFTWARE.
 
 *****************************************************************************/
 
-var LoadManager = function (eventIdentifier) {
+var LoadManager = function (eventIdentifier, eventIdentifierSuper) {
     this.loadQueue = [];
     this.identifier = eventIdentifier;
+    this.identifierSuper = eventIdentifierSuper;
     this.moduleLoader = new ModuleLoader(eventIdentifier);
-    this.eventHandler = new EventHandler(eventIdentifier);
-    this.eventHandler.registerEvent(eventIdentifier, this.eventStatusCallback);
+    this.eventHandler = new EventHandler();
+    this.eventHandler.registerEvent(eventIdentifier, this.eventStatusCallback.bind(this));
 };
 
 LoadManager.prototype.addToQueue = function(meta) {
@@ -64,7 +65,6 @@ LoadManager.prototype.QueueStatus = function() {
                 sum++;
             }
         }
-
         if(sum == queueLength) {
             return true;
         } else {
@@ -77,16 +77,13 @@ LoadManager.prototype.QueueStatus = function() {
 };
 
 LoadManager.prototype.eventStatusCallback = function(event) {
-    var action = -1;
-    if(event != null) {
-        action = event.detail.action;
-    }
-    switch(action) {
-        case 0:
-            Framework.JSFWInitialLoadManager.updateQueueItemStatus({key: event.detail.key, status: event.detail.status});
-            if(Framework.JSFWInitialLoadManager.QueueStatus() == true) {
-                Framework.JSFWEventHandler.notify(eventHandlerIdentifiers["jsfw-app-init"], {'status': 1});
-            }
-        break;
+    if(event != null)
+        this.updateQueueItemStatus({key: event.detail.key, status: event.detail.status});
+    if(this.QueueStatus() == true) {
+        this.eventHandler.unregisterEvent(this.identifier, this.eventStatusCallback);
+        this.eventHandler.notify(this.identifierSuper, {'status': 2});
+    } else {
+        
+        this.eventHandler.notify(this.identifierSuper, {'status': 1});
     }
 };

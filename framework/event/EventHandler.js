@@ -14,7 +14,6 @@ EventHandler.prototype.unregisterEvent = function (eventIdentifier, callback) {
 EventHandler.prototype.notify = function(eventIdentifier, data) {
     var event = new CustomEvent(eventIdentifier, {'detail': data});
     if(window.dispatchEvent(event)) {
-        console.log('event dispatched');
         return true;
     } else {
         return false;

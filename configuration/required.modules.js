@@ -6,6 +6,6 @@ var modules = [
 //Callback
 (function () {
     for(var i=0; i<modules.length; i++) {
-        Framework.JSFWInitialLoadManager.addToQueue(modules[i]);
+        Framework.JSFWTaskManager.addToQueue(modules[i]);
     }
 })();
