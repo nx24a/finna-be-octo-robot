@@ -23,3 +23,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 *****************************************************************************/
+
+var Storyboard = function() {
+    
+};
+
+//Callback - Register module
+(function () {
+    var lref = new StoryboardManager();
+    var args = {'module-identifier': 'jsfw-storyboad-object','module-namespace': 'none', 'status': 'loaded', 'reference': lref};
+    Framework.JSFWModuleManager.register(args);
+})();

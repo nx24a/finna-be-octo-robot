@@ -51,23 +51,51 @@ ModuleLoader.prototype.loadModule = function (moduleInformation) {
 };
 
 ModuleLoader.prototype.loadFile = function (filepath) {
-    var keeper = document.getElementById('application-scripts');
-    var script = document.createElement('script');
-    script.setAttribute('type', 'text/javascript');
-    script.setAttribute('src', filepath);
-    script.setAttribute('async', true);
+    
+    var pathSegments = filepath.split('.');
+    var ext = pathSegments[pathSegments.length-1];
+    
+    switch(ext) {   
+        case 'js':
+            var keeper = document.getElementById('application-scripts');
+            var script = document.createElement('script');
+            script.setAttribute('type', 'text/javascript');
+            script.setAttribute('src', filepath);
+            script.setAttribute('async', true);
 
-    script.onerror = function () {
-        script.onerror = null;
-    };
+            script.onerror = function () {
+                script.onerror = null;
+            };
 
-    script.onload = script.onreadystatechange = function () {
-        if(!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
-            script.onload = script.onreadystatechange = null;
-        }
-    };
+            script.onload = script.onreadystatechange = function () {
+                if(!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
+                    script.onload = script.onreadystatechange = null;
+                }
+            };
 
-    keeper.appendChild(script);
+            keeper.appendChild(script);
+            break;
+        case 'css':
+            var keeper = document.head;
+            var script = document.createElement('link');
+            script.setAttribute('rel', 'stylesheet');
+            script.setAttribute('type', 'text/css');
+            script.setAttribute('href', filepath);
+
+            script.onerror = function () {
+                script.onerror = null;
+            };
+
+            script.onload = script.onreadystatechange = function () {
+                if(!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
+                    script.onload = script.onreadystatechange = null;
+                }
+            };
+
+            keeper.appendChild(script);
+            break;  
+    }
+
 };
 
 ModuleLoader.prototype.notify = function (data) {

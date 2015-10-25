@@ -27,6 +27,7 @@ THE SOFTWARE.
 var JSFW = function () {
     console.info("JSFW-Information: Initializing");
     //Loading Events
+    this.JSFWDisplayInformation = {'width': null, 'height': null};
     this.JSFWEventHandler = new EventHandler();
     this.JSFWEventHandler.registerEvent(eventHandlerIdentifiers['jsfw-init'], this.loadFramework.bind(this));
 
@@ -39,6 +40,10 @@ var JSFW = function () {
     
     //Application
     this.JSFWApplication = null;
+    
+    this.JSFWDisplayInformation.width = window.innerWidth;
+    this.JSFWDisplayInformation.height = window.innerHeight;
+    console.log(this.displayInformation);
 };
 
 JSFW.prototype.loadFramework = function (data) {
@@ -96,5 +101,6 @@ JSFW.prototype.loadApplication = function (data) {
 };
 
 JSFW.prototype.run = function () {
-    this.JSFWModuleManager.access('jsfw-app-bootstrap').run();
+    this.JSFWApplication = this.JSFWModuleManager.access('jsfw-app-bootstrap');
+    this.JSFWApplication.run();
 };
